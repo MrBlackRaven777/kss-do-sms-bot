@@ -17,13 +17,13 @@ def start(message):
 
 @bot.message_handler(commands=['balance'])
 def balance(message):
-	params = {'api_id':config.sms_token, 'json':1}
+    params = {'api_id':config.sms_token, 'json':1}
     result = requests.get('https://sms.ru/my/balance', params)
     if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
         balance = int(result.json().get('balance'))
         answer = 'Ваш баланс: ' + str(balance) + 'р.'
-        else:
-        	answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
+    else:
+        answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     bot.send_message(message.chat.id, answer)
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
