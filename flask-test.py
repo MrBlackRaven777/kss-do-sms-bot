@@ -27,4 +27,4 @@ def webhook():
     return "!", 200
 
 #print('os.port is ' + str(os.environ.get('PORT', 5000)) + ' host = ' + str(os.environ.get('URL')))
-server.run(host='127.0.0.1', port=os.environ.get('PORT', 5000), debug=True)
+server.run(host='127.0.0.1', port=int(os.environ.get('PORT', 5000)), debug=True)
