@@ -1,1 +1,1 @@
-web: python3 flask-test.py
+web: python3 bot.py
