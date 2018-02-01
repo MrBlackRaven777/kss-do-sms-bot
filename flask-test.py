@@ -5,7 +5,7 @@ from flask import Flask, request
 
 bot = telebot.TeleBot(config.token)
 
-#server = Flask(__name__)
+server = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -29,5 +29,7 @@ def webhook():
     return "!", 200
 
 
+#if __name__ == '__main__':
 server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
 server = Flask(__name__)
+
