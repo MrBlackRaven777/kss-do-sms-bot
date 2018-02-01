@@ -21,7 +21,7 @@ def balance(message):
         answer = 'Ваш баланс: ' + str(balance) + 'р.'
     bot.send_message(message.chat_id, answer)
 
-@bot.message_handler(func=lambda message: True, content_types=['text']):
+@bot.message_handler(func=lambda message: True, content_types=['text'])
 def echo(message):
     answer = 'К сожалению, я не знаю эту команду. Но в будущем я собираюсь расширить свой функционал'
     bot.send_message(message.chat_id, answer)
