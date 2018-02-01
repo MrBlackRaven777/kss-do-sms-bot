@@ -28,5 +28,5 @@ def webhook():
     bot.set_webhook(url="https://kss-do-sms-bot.herokuapp.com/"+config.token)
     return "!", 200
 
-#print('os.port is ' + str(os.environ.get('PORT', 5000)) + ' host = ' + str(os.environ.get('URL')))
-server.run(host='127.0.0.1', port=int(os.environ.get('PORT', 5000)), debug=True)
+if __name__ == '__main__':
+    server.run(host='127.0.0.1', port=int(os.environ.get('PORT', 5000)), debug=True)
