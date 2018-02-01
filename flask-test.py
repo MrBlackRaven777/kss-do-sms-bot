@@ -17,7 +17,7 @@ def echo_message(message):
     print('recieve echo message: ' + message.text)
     bot.reply_to(message, message.text)
 
-@server.route("/"+config.token, methods=['POST'])
+@server.route("/"+config.token, methods=['GET', 'POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
