@@ -8,6 +8,8 @@ bot = telebot.TeleBot(config.token)
 
 server = Flask(__name__)
 
+bos.send_message(config.admin_id, 'I\'m online')
+
 @bot.message_handler(commands=['start'])
 def start(message):
     answer = 'Приветствую тебя, %s! Я бот для управления смс-рассылкой :ООО"КомпозитСпецСтрой". Отправь мне /balance чтобы узнать о текущем состоянии счета.'%(message.from_user.first_name)
@@ -15,10 +17,13 @@ def start(message):
 
 @bot.message_handler(commands=['balance'])
 def balance(message):
-    result = requests.get('https://sms.ru/my/balance?api_id=BA02CA0C-944C-201D-6D3A-3AF3603B9BA3&json=1')
+	params = {'api_id':config.sms_token, 'json':1}
+    result = requests.get('https://sms.ru/my/balance', params)
     if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
         balance = int(result.json().get('balance'))
         answer = 'Ваш баланс: ' + str(balance) + 'р.'
+        else:
+        	answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     bot.send_message(message.chat.id, answer)
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
