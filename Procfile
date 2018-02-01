@@ -1,1 +1,1 @@
-worker: python flask-test.py
+web: python flask-test.py
