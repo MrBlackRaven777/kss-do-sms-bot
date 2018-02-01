@@ -23,7 +23,7 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url="https://dashboard.heroku.com/apps/kss-do-sms-bot/510378038:AAGMg1dxOJTLciRETnUx4RlrgSWbW34cnfI")
+    bot.set_webhook(url="https://heroku.com/apps/kss-do-sms-bot/510378038:AAGMg1dxOJTLciRETnUx4RlrgSWbW34cnfI")
     return "!", 200
 
 print(os.environ.get('PORT', 5000))
