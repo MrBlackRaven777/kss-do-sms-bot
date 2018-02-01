@@ -8,7 +8,7 @@ bot = telebot.TeleBot(config.token)
 
 server = Flask(__name__)
 
-bos.send_message(config.admin_id, 'I\'m online')
+bot.send_message(config.admin_id, 'I\'m online')
 
 @bot.message_handler(commands=['start'])
 def start(message):
