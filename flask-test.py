@@ -15,7 +15,7 @@ def start(message):
 def echo_message(message):
     bot.reply_to(message, message.text)
 
-@server.route("/bot", methods=['POST'])
+@server.route("/510378038:AAGMg1dxOJTLciRETnUx4RlrgSWbW34cnfI", methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
@@ -23,9 +23,8 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url="https://kss-do-sms-bot.herokuapp.com/bot")
+    bot.set_webhook(url="https://kss-do-sms-bot.herokuapp.com/510378038:AAGMg1dxOJTLciRETnUx4RlrgSWbW34cnfI")
     return "!", 200
 
-print(os.environ.get('PORT', 5000))
-server.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
-server = Flask(__name__)
+print('os.port is ' + str(os.environ.get('PORT', 5000)))
+server.run(host=os.environ.get('URL'), port=os.environ.get('PORT', 5000))
