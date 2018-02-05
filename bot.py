@@ -42,7 +42,8 @@ def cost_phones(message):
     chat_id = message.chat.id
     try:
         numbers_list = utils.format_numbers(message.text, '0')
-        answer = 'Вы прислали мне номер' + ('а' if len(numbers_list)>1) + ': ' + \n.join(numbers_list) + '.\nЕсли что-то введено неправильно, нажмите /cost и введите номера заново. Введите текст сообщения:'
+        postfix = 'а' if len(numbers_list)>1 else ''
+        answer = 'Вы прислали мне номер' + postfix + ': ' + '\n'.join(numbers_list) + '.\nЕсли что-то введено неправильно, нажмите /cost и введите номера заново. Введите текст сообщения:'
         utils.shelve_write(chat_id, states.U_ENT_PHONES)
         numbers_string = ','.join(utils.format_numbers(message.text, '2'))
     except TypeError:
@@ -65,7 +66,7 @@ def cost_total(message):
             answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     except TypeError:
         answer = 'Проверьте правильность введенных номеров'
-    bot.send_message(chat_i:d, answer, parse_mode='markdown')
+    bot.send_message(chat_id, answer, parse_mode='markdown')
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
