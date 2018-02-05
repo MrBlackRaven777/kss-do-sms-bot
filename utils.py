@@ -1,6 +1,7 @@
 import config
 import sys
 import shelve
+import re
 
 def shelve_write(id, state):
     with shelve.open(config.shelve_name) as storage:

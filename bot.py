@@ -3,6 +3,7 @@ import os
 import config
 import requests
 import utils
+from config import u_states as states
 from flask import Flask, request
 
 bot = telebot.TeleBot(config.token)
