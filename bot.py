@@ -10,6 +10,7 @@ bot = telebot.TeleBot(config.token)
 
 server = Flask(__name__)
 
+numbers_string = ''
 #bot.send_message(config.admin_id, 'I\'m online')
 
 @bot.message_handler(commands=['start'])
@@ -35,15 +36,36 @@ def cost_start(message):
     answer = 'Введите список номеров для проверки стоимости. Все номера должны быть в одном сообщении, в теле номера не должно быть пробелов.'
     bot.send_message(chat_id, answer)
 
-@bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ASK_COST, content_types=['text'])
+@bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ASK_COST)
 def cost_phones(message):
+    global numbers_string
     chat_id = message.chat.id
     try:
-        numbers_list = utils.format_numbers(message.text)
-        answer = 'Вы прислали мне номера: ' + ', '.join(numbers_list) + '. Если что-то введено неправильно, нажмите /cost и введите номера заново.'
+        numbers_list = utils.format_numbers(message.text, '0')
+        answer = 'Вы прислали мне номер' + ('а' if len(numbers_list)>1) + ': ' + \n.join(numbers_list) + '.\nЕсли что-то введено неправильно, нажмите /cost и введите номера заново. Введите текст сообщения:'
+        utils.shelve_write(chat_id, states.U_ENT_PHONES)
+        numbers_string = ','.join(utils.format_numbers(message.text, '2'))
     except TypeError:
         answer = 'Проверьте правильность введенных номеров'
     bot.send_message(chat_id, answer)
+    
+
+@bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_PHONES)
+def cost_total(message):
+    global numbers_string
+    chat_id = message.chat.id
+    params = {'api_id':config.sms_token, 'to' : numbers_string, 'msg' : message.text, 'json':1}
+    try:
+        result = requests.get('https://sms.ru/my/cost', params)
+        if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
+            cost = int(result.json().get('total_cost'))
+            sms_count = result.json().get('total_sms')
+            answer = 'Стоимость отправки <b>%d</b> sms составит <b>%d</b>р.'%(sms_count, cost)
+        else:
+            answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
+    except TypeError:
+        answer = 'Проверьте правильность введенных номеров'
+    bot.send_message(chat_i:d, answer, parse_mode='markdown')
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])

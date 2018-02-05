@@ -4,8 +4,8 @@ admin_id = 332761
 project_name = 'kss-do-sms-bot'
 shelve_name = 'users_storage'
 phone_num_format_switch = '0'
-num_format_dict = {'0' : '+7({0}){1}-{2}-{3}', '1' : '({0}) {1}-{2}{3}'}
-phone_num_format = num_format_dict.get(phone_num_format_switch)
+num_format_dict = {'0' : '+7({0}){1}-{2}-{3}', '1' : '({0}) {1}-{2}{3}', '2' : '7{0}{1}{2}{3}'}
+#phone_num_format = num_format_dict.get(phone_num_format_switch)
 
 class u_states:
     U_NO_ACT = '0'
