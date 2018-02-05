@@ -29,5 +29,5 @@ def format_numbers(string):
         group_number = clear_pattern.match(number)
         g = group_number.groups()
         grouped_number = config.phone_num_format.format(g[1], g[2], g[3], g[4])
-        clear_numbers.apppend(grouped_number)
+        clear_numbers.append(grouped_number)
     return clear_numbers
