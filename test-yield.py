@@ -34,14 +34,10 @@ def cost_start(message):
 @bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ASK_COST, content_types=['text'])
 def cost_phones(message):
     chat_id = message.chat.id
-    phone_pattern = re.compile('([\+]?[\(\)\-\d]{9,17})\b*')
-    phone_list = re.findall(phone_pattern, message.text)
-    print(phone_list)
-#    print(re.match(phone_pattern, message.text).group())
-    if len(phone_list) > 0:
-        answer = 'Вы прислали мне номера: ' + ', '.join(phone_list) + '. Если что-то введено неправильно, нажмите /cost и введите номера заново.
-        utils.shelve_write(id=chat_id, state=states.U_ENT_PHONES) 
-    else:
+    try:
+        numbers_list = utils.format_numbers(message.text)
+        answer = 'Вы прислали мне номера: ' + ', '.join(numbers_list) + '. Если что-то введено неправильно, нажмите /cost и введите номера заново.
+    except 'error':
         answer = 'Проверьте правильность введенных номеров'
     bot.send_message(chat_id, answer)
      
