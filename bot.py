@@ -38,8 +38,8 @@ def cost_phones(message):
     chat_id = message.chat.id
     try:
         numbers_list = utils.format_numbers(message.text)
-        answer = 'Вы прислали мне номера: ' + ', '.join(numbers_list) + '. Если что-то введено неправильно, нажмите /cost и введите номера заново.
-    except 'error':
+        answer = 'Вы прислали мне номера: ' + ', '.join(numbers_list) + '. Если что-то введено неправильно, нажмите /cost и введите номера заново.'
+    except TypeError:
         answer = 'Проверьте правильность введенных номеров'
     bot.send_message(chat_id, answer)
 

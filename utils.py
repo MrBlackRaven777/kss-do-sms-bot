@@ -14,11 +14,11 @@ def shelve_read(id):
             data = sys.exc_info()
         return data
 
-def format_numbers(string)
+def format_numbers(string):
     number_pattern = re.compile('([\+]?[\(\)\-\d]{9,17})\b*')
     raw_numbers = re.findall(number_pattern, string)
     if len(raw_numbers)==0:
-        return 'no numbers'
+        raise TypeError('must be at least 1 phone number')
     bad_symbols = ['+', '-', '(', ')', ' ']
     clear_numbers = []
     clear_pattern = re.compile('([7-8])([\d]{3})([\d]{3})([\d]{2})([\d]{2})')
