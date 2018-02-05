@@ -1,4 +1,4 @@
 Flask==0.12.2
 pyTelegramBotAPI==3.5.2
 requests==2.18.4
-telebot>=0.0.3
+telebot==0.0.3
