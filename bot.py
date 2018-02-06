@@ -56,7 +56,7 @@ def cost_start(message):
     answer = 'Введите список номеров для проверки стоимости. Все номера должны быть в одном сообщении, в теле номера не должно быть пробелов.'
     bot.send_message(chat_id, answer)
 
-@bot.message_handler(utils.shelve_read(message.chat.id)==states.U_ASK_COST, content_types=['text'])
+@bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ASK_COST and check_id(message.chat.id), content_types=['text'])
 #@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def cost_phones(message):
     global numbers_string
@@ -71,7 +71,7 @@ def cost_phones(message):
         answer = 'Проверьте правильность введенных номеров'
     bot.send_message(chat_id, answer)
     
-@bot.message_handler(utils.shelve_read(message.chat.id)==states.U_ENT_PHONES, content_types=['text'])
+@bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_PHONES and check_id(message.chat.id), content_types=['text'])
 #@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def cost_total(message):
     global numbers_string
@@ -94,7 +94,7 @@ def cost_total(message):
         answer = 'Проверьте правильность введенного сообщения'
     bot.send_message(chat_id, answer, parse_mode='HTML')
 
-@bot.message_handler(commands=['more'], utils.shelve_read(message.chat.id)==states.U_ENT_MSG)
+@bot.message_handler(commands=['more'], func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_MSG and check_id(message.chat.id))
 #@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def sms_more_info(message):
     global numbers_string
@@ -129,7 +129,7 @@ def sms_more_info(message):
 #    chat_id = message.chat.id
 #    bot.send_message(chat_id, answer, parse_mode='markdown')
 
-@bot.message_handler(func=lambda message: True, content_types=['text'])
+@bot.message_handler(func=lambda message: True and check_id(message.chat.id), content_types=['text'])
 #@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def echo(message):
     answer = 'К сожалению, я не знаю эту команду. Но в будущем я собираюсь расширить свой функционал'
