@@ -32,4 +32,5 @@ print(result.json().get('total_cost'))
 all_sms = result.json().get('sms')
 print(all_sms)
 for sms in all_sms.items():
+    print(sms[0])
     print(sms[1].get('status'))
