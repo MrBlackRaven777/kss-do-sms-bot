@@ -57,6 +57,7 @@ def cost_total(message):
     chat_id = message.chat.id
     params = {'api_id':config.sms_token, 'to' : numbers_string, 'msg' : message.text, 'json':1}
     try:
+        request = 
         result = requests.get('https://sms.ru/my/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             cost = int(result.json().get('total_cost'))
