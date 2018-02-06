@@ -70,7 +70,7 @@ def cost_total(message):
     except:
         print(sys.exc_info())
         answer = 'Проверьте правильность введенного сообщения'
-    bot.send_message(chat_id, answer, parse_mode='markdown')
+    bot.send_message(chat_id, answer, parse_mode='HTML')
 
 
 @bot.message_handler(commands=['more'], func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_MSG)
@@ -84,7 +84,7 @@ def sms_more_info(message):
         result = requests.get('https://sms.ru/sms/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             all_sms = result.json().get('sms')
-            for sms in all_sms:
+            for sms in all_sms.items():
                 if sms[1].get('status') =='OK':
                     sms_block = 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s</b>;\nСтоимость: <b>%s</b>\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
                 else:
@@ -95,9 +95,11 @@ def sms_more_info(message):
         else:
             answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     except:
-        print(sys.exc_info())
-        answer = 'Проверьте правильность запроса'
-    bot.send_message(chat_id, answer, parse_mode='markdown')
+        p = sys.exc_info()
+        for it in p[3]:
+            print(it)
+        answer = 'Проверьте правильность запроса' 
+    bot.send_message(chat_id, answer, parse_mode='HTML')
     
 #@bot.message_handler(commands=['test'])
 #def test(message):
