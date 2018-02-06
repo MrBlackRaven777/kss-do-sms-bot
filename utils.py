@@ -32,6 +32,10 @@ def format_numbers(string, format='0'):
         clear_numbers.append(grouped_number)
     return clear_numbers
 
+def check_id(func_of_bot):
+    def wrapper(id)
+        if config.public_mode_on = False
+            if id in config.a
 #def get_request():
 #    params = {'api_id':config.sms_token, 'json':1}
 #    result = requests.get('https://sms.ru/my/balance', params)
