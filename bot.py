@@ -30,14 +30,12 @@ def check_id(id):
             return False
         
 
-@bot.message_handler(commands=['start'])
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
+@bot.message_handler(commands=['start'], func=lambda message: check_id(message.chat.id))
 def start(message):
     answer = 'Приветствую тебя, %s! Я бот для управления смс-рассылкой ООО"КомпозитСпецСтрой". Отправь мне /help чтобы узнать о всех моих функциях.'%(message.from_user.first_name)
     bot.send_message(message.chat.id, answer)
 
-@bot.message_handler(commands=['balance'])
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
+@bot.message_handler(commands=['balance'], func=lambda message: check_id(message.chat.id))
 def balance(message):
     params = {'api_id':config.sms_token, 'json':1}
     result = requests.get('https://sms.ru/my/balance', params)
@@ -48,8 +46,7 @@ def balance(message):
         answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     bot.send_message(message.chat.id, answer, parse_mode='HTML')
 
-@bot.message_handler(commands=['cost'])
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
+@bot.message_handler(commands=['cost'], func=lambda message: check_id(message.chat.id))
 def cost_start(message):
     chat_id = message.chat.id
     utils.shelve_write(id=chat_id, state=states.U_ASK_COST)
@@ -57,7 +54,6 @@ def cost_start(message):
     bot.send_message(chat_id, answer)
 
 @bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ASK_COST and check_id(message.chat.id), content_types=['text'])
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def cost_phones(message):
     global numbers_string
     chat_id = message.chat.id
@@ -72,7 +68,6 @@ def cost_phones(message):
     bot.send_message(chat_id, answer)
     
 @bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_PHONES and check_id(message.chat.id), content_types=['text'])
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def cost_total(message):
     global numbers_string
     global sending_message
@@ -95,7 +90,6 @@ def cost_total(message):
     bot.send_message(chat_id, answer, parse_mode='HTML')
 
 @bot.message_handler(commands=['more'], func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_MSG and check_id(message.chat.id))
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def sms_more_info(message):
     global numbers_string
     global sending_message
@@ -121,16 +115,8 @@ def sms_more_info(message):
         answer = 'Проверьте правильность запроса' 
     bot.send_message(chat_id, answer, parse_mode='HTML')
     
-#@bot.message_handler(commands=['test'])
-#def test(message):
-#    prev_msg = message.message_id(message.message_id-1).text
-#    prevprev_msg = message.message_id(message.message_id-2).text
-#    answer = 'Previous message id:\n<b>%s</b>\nPrevious message text:\n<b>%s</b>\nPrePrevious message id:\n<b>%s</b>\nPrePrevious message text:\n<b>%s</b>\n'%(message.message_id-1, prev_msg,message.message_id-2,prevprev_msg)
-#    chat_id = message.chat.id
-#    bot.send_message(chat_id, answer, parse_mode='markdown')
 
 @bot.message_handler(func=lambda message: True and check_id(message.chat.id), content_types=['text'])
-#@bot.message_handler(func=lambda message: check_id(message.chat.id))
 def echo(message):
     answer = 'К сожалению, я не знаю эту команду. Но в будущем я собираюсь расширить свой функционал'
     bot.send_message(message.chat.id, answer)
