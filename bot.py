@@ -79,7 +79,7 @@ def sms_more_info(message):
     chat_id = message.chat.id
     text = message.text.replace(' ','+')
     params = {'api_id':config.sms_token, 'to' : numbers_string, 'msg' : text, 'json':1}
-    sms_list = []
+    sms_list = list([])
     try:
         result = requests.get('https://sms.ru/sms/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
@@ -96,7 +96,7 @@ def sms_more_info(message):
             answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     except:
         p = sys.exc_info()
-        for it in p[3]:
+        for it in p[2]:
             print(it)
         answer = 'Проверьте правильность запроса' 
     bot.send_message(chat_id, answer, parse_mode='HTML')
