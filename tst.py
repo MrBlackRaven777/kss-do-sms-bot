@@ -28,8 +28,8 @@ print(','.join(clear_numbers))
 params = {'api_id':config.sms_token,'to':','.join(clear_numbers), 'msg':text, 'json':1}
 print(params)
 result = requests.get('https://sms.ru/sms/cost', params)
-print(result.json())
-print(result.json().get('total_cost'))
+print('JSON:\n'+str(result.json()))
+print('TOTAL COST: ' + str(result.json().get('total_cost')))
 all_sms = result.json().get('sms')
 print(all_sms)
 for sms in all_sms.items():

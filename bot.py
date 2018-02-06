@@ -12,6 +12,7 @@ bot = telebot.TeleBot(config.token)
 server = Flask(__name__)
 
 numbers_string = ''
+sending_message = ''
 #bot.send_message(config.admin_id, 'I\'m online')
 
 @bot.message_handler(commands=['start'])
@@ -55,6 +56,7 @@ def cost_phones(message):
 @bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_PHONES, content_types=['text'])
 def cost_total(message):
     global numbers_string
+    global sending_message
     chat_id = message.chat.id
     text = message.text.replace(' ','+')
     params = {'api_id':config.sms_token, 'to' : numbers_string, 'msg' : text, 'json':1}
@@ -65,6 +67,7 @@ def cost_total(message):
             sms_count = result.json().get('total_sms')
             answer = 'Стоимость отправки <b>%d</b> SMS составит <b>%d</b>р. Чтобы узнать подробности, нажмите /more'%(sms_count, cost)
             utils.shelve_write(chat_id, states.U_ENT_MSG)
+            sending_message = message.text
         else:
             answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     except:
@@ -76,8 +79,9 @@ def cost_total(message):
 @bot.message_handler(commands=['more'], func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_MSG)
 def sms_more_info(message):
     global numbers_string
+    global sending_message
     chat_id = message.chat.id
-    text = message.text.replace(' ','+')
+    text = sending_message.replace(' ','+')
     params = {'api_id':config.sms_token, 'to' : numbers_string, 'msg' : text, 'json':1}
     try:
         result = requests.get('https://sms.ru/sms/cost', params)
