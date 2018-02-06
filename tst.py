@@ -1,6 +1,7 @@
 import re
 import config
 import requests
+import json
 
 string = '79267551274, #+79057892429 , 8-963-998-16-15,+7(964)621-52-28 8-(968)-813-47-38 +7-(905)-569-30-84 7 894 584 68 98'
 text = 'Hello, world'
@@ -28,6 +29,7 @@ params = {'api_id':config.sms_token,'to':','.join(clear_numbers), 'msg':text, 'j
 print(params)
 result = requests.get('https://sms.ru/sms/cost', params)
 print(result.json().get('total_cost'))
-total_sms = result.json().get('sms')
-for sms in total_sms:
-    
+all_sms = result.json().get('sms')
+print(all_sms)
+for sms in all_sms.items():
+    print(sms[1].get('status'))
