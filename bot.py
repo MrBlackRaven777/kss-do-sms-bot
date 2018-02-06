@@ -29,13 +29,15 @@ def check_id(func_of_bot):
                     for id in config.admin_ids:
                         bot.send_message(id, user_info, parse_mode='HTML')
 
-@check_id
+
 @bot.message_handler(commands=['start'])
+@check_id
 def start(message):
     answer = 'Приветствую тебя, %s! Я бот для управления смс-рассылкой :ООО"КомпозитСпецСтрой". Отправь мне /balance чтобы узнать о текущем состоянии счета.'%(message.from_user.first_name)
     bot.send_message(message.chat.id, answer)
 
 @bot.message_handler(commands=['balance'])
+@check_id
 def balance(message):
     params = {'api_id':config.sms_token, 'json':1}
     result = requests.get('https://sms.ru/my/balance', params)
@@ -46,16 +48,16 @@ def balance(message):
         answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     bot.send_message(message.chat.id, answer, parse_mode='HTML')
 
-@check_id
 @bot.message_handler(commands=['cost'])
+@check_id
 def cost_start(message):
     chat_id = message.chat.id
     utils.shelve_write(id=chat_id, state=states.U_ASK_COST)
     answer = 'Введите список номеров для проверки стоимости. Все номера должны быть в одном сообщении, в теле номера не должно быть пробелов.'
     bot.send_message(chat_id, answer)
 
-@check_id
 @bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ASK_COST)
+@check_id
 def cost_phones(message):
     global numbers_string
     chat_id = message.chat.id
@@ -69,8 +71,8 @@ def cost_phones(message):
         answer = 'Проверьте правильность введенных номеров'
     bot.send_message(chat_id, answer)
     
-@check_id
 @bot.message_handler(func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_PHONES, content_types=['text'])
+@check_id
 def cost_total(message):
     global numbers_string
     global sending_message
@@ -92,8 +94,8 @@ def cost_total(message):
         answer = 'Проверьте правильность введенного сообщения'
     bot.send_message(chat_id, answer, parse_mode='HTML')
 
-@check_id
 @bot.message_handler(commands=['more'], func=lambda message: utils.shelve_read(message.chat.id)==states.U_ENT_MSG)
+@check_id
 def sms_more_info(message):
     global numbers_string
     global sending_message
@@ -127,8 +129,8 @@ def sms_more_info(message):
 #    chat_id = message.chat.id
 #    bot.send_message(chat_id, answer, parse_mode='markdown')
 
-@check_id
 @bot.message_handler(func=lambda message: True, content_types=['text'])
+@check_id
 def echo(message):
     answer = 'К сожалению, я не знаю эту команду. Но в будущем я собираюсь расширить свой функционал'
     bot.send_message(message.chat.id, answer)
