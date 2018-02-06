@@ -16,17 +16,19 @@ sending_message = ''
 #bot.send_message(config.admin_id, 'I\'m online')
 
 def check_id(id):
+    print('check_id is on action')
     if config.public_mode_on == False:
-        if id in config.admin_ids:
-            func_of_bot(message)
+        if str(id) in config.admin_ids:
+            return True
         else:
-            bot.send_message(message.chat.id, 'Отказано в доступе')
+            bot.send_message(id, 'Отказано в доступе')
             if config.notify_admins == True:
-                user = message.from_user
-                print(user)
+                user = bot.get_chat(id)
                 user_info = 'В бот стучится неавторизованный пользователь: <b>%s %s</b>;\nUsername: <b>@%s</b>;\nid: <b>%s</b>.'%(user.first_name, user.last_name, user.username, user.id)
-                for id in config.admin_ids:
-                    bot.send_message(id, user_info, parse_mode='HTML')
+                for adm_id in config.admin_ids:
+                    bot.send_message(int(adm_id), user_info, parse_mode='HTML')
+            return False
+        
 
 @bot.message_handler(func=lambda message: check_id(message.chat.id))
 @bot.message_handler(commands=['start'])
