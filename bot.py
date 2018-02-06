@@ -79,11 +79,11 @@ def sms_more_info(message):
     chat_id = message.chat.id
     text = message.text.replace(' ','+')
     params = {'api_id':config.sms_token, 'to' : numbers_string, 'msg' : text, 'json':1}
-    sms_list = ['Всего SMS: <b>%d</b>;\nОбщая стоимость: <b>%d</b>;\n=========='%(result.json().get('sms'),result.json().get('total_cost'))]
     try:
         result = requests.get('https://sms.ru/sms/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             all_sms = result.json().get('sms')
+            sms_list = ['Всего SMS: <b>%d</b>;\nОбщая стоимость: <b>%d</b>;\n=========='%(result.json().get('sms'),result.json().get('total_cost'))]
             for sms in all_sms.items():
                 if sms[1].get('status') =='OK':
                     sms_block = 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s</b>;\nСтоимость: <b>%s</b>\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
