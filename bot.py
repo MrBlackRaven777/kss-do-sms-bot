@@ -83,7 +83,7 @@ def sms_more_info(message):
         result = requests.get('https://sms.ru/sms/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             all_sms = result.json().get('sms')
-            sms_list = ['Всего SMS: <b>%d</b>;\nОбщая стоимость: <b>%d</b>;\n=========='%(result.json().get('total_sms'),result.json().get('total_cost'))]
+            sms_list = list('Всего SMS: <b>%d</b>;\nОбщая стоимость: <b>%d</b>;\n=========='%(result.json().get('total_sms'),result.json().get('total_cost')))
             for sms in all_sms.items():
                 if sms[1].get('status') =='OK':
                     sms_block = 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s</b>;\nСтоимость: <b>%s</b>\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
@@ -95,7 +95,8 @@ def sms_more_info(message):
         else:
             answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     except:
-        print(sys.exc_info())
+        p = sys.exc_info()
+        print(p)
         answer = 'Проверьте правильность запроса' 
     bot.send_message(chat_id, answer, parse_mode='HTML')
     
