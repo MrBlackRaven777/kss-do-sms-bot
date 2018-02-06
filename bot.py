@@ -25,11 +25,11 @@ def balance(message):
     params = {'api_id':config.sms_token, 'json':1}
     result = requests.get('https://sms.ru/my/balance', params)
     if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
-        balance = int(result.json().get('balance'))
-        answer = 'Ваш баланс: ' + str(balance) + 'р.'
+        balance = round(result.json().get('balance'), 2)
+        answer = 'Ваш баланс: <b>%s р.</b>'%(balance)
     else:
         answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
-    bot.send_message(message.chat.id, answer)
+    bot.send_message(message.chat.id, answer, parse_mode='HTML')
 
 @bot.message_handler(commands=['cost'])
 def cost_start(message):
@@ -87,10 +87,10 @@ def sms_more_info(message):
         result = requests.get('https://sms.ru/sms/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             all_sms = result.json().get('sms')
-            answer = 'Всего SMS: <b>%d шт</b>;\nОбщая стоимость: <b>%d р</b>;\n==========\n'%(result.json().get('total_sms'),float(result.json().get('total_cost')))
+            answer = 'Всего SMS: <b>%s шт</b>;\nОбщая стоимость: <b>%s р</b>;\n==========\n'%(result.json().get('total_sms'), result.json().get('total_cost'))
             for sms in all_sms.items():
                 if sms[1].get('status') =='OK':
-                    answer = answer + 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s шт</b>;\nСтоимость: <b>%s р</b>\n==========\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
+                    answer = answer + 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s шт</b>;\nСтоимость: <b>%s р.</b>\n==========\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
                 else:
                     answer = answer + 'Номер получателя: <b>%s</b>;\nСтатус доставки: <b>%s</b>, <b>%s</b>\n==========\n'%(sms[0],sms[1].get('status'),sms[1].get('status_text'))
             utils.shelve_write(chat_id, states.U_NO_ACT)
