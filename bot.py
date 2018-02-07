@@ -35,13 +35,18 @@ def start(message):
     answer = 'Приветствую тебя, %s! Я бот для управления смс-рассылкой ООО"КомпозитСпецСтрой". Отправь мне /help чтобы узнать о всех моих функциях.'%(message.from_user.first_name)
     bot.send_message(message.chat.id, answer)
 
+@bot.message_handler(commands=['help'], func=lambda message: check_id(message.chat.id))
+def help(message):
+    answer = '/balance - узнать балан на счете;\n/cost - узнать стоимость отправки сообщения на один или несколько номеров;'
+    bot.send_message(message.chat.id, answer)
+
 @bot.message_handler(commands=['balance'], func=lambda message: check_id(message.chat.id))
 def balance(message):
     params = {'api_id':config.sms_token, 'json':1}
     result = requests.get('https://sms.ru/my/balance', params)
     if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
         balance = round(result.json().get('balance'), 2)
-        answer = 'Ваш баланс: <b>%s р.</b>'%(balance)
+        answer = 'Ваш баланс: <b>%sр</b>.'%(balance)
     else:
         answer = 'Произошла ошибка №%d: %s'%(result.get('status_code'), result.get('status_text'))
     bot.send_message(message.chat.id, answer, parse_mode='HTML')
@@ -79,7 +84,7 @@ def cost_total(message):
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             cost = result.json().get('total_cost')
             sms_count = result.json().get('total_sms')
-            answer = 'Стоимость отправки <b>%d</b> SMS составит <b>%d р</b>. Чтобы узнать подробности, нажмите /more'%(sms_count, cost)
+            answer = 'Стоимость отправки <b>%d</b> SMS составит <b>%sр</b>. Чтобы узнать подробности, нажмите /more'%(sms_count, cost)
             utils.shelve_write(chat_id, states.U_ENT_MSG)
             sending_message = message.text
         else:
@@ -100,10 +105,10 @@ def sms_more_info(message):
         result = requests.get('https://sms.ru/sms/cost', params)
         if result.json().get('status') == 'OK' and result.json().get('status_code') == 100:
             all_sms = result.json().get('sms')
-            answer = 'Всего SMS: <b>%s шт</b>;\nОбщая стоимость: <b>%s р</b>;\n==========\n'%(result.json().get('total_sms'), result.json().get('total_cost'))
+            answer = 'Всего SMS: <b>%s шт</b>;\nОбщая стоимость: <b>%sр</b>;\n==========\n'%(result.json().get('total_sms'), result.json().get('total_cost'))
             for sms in all_sms.items():
                 if sms[1].get('status') =='OK':
-                    answer = answer + 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s шт</b>;\nСтоимость: <b>%s р.</b>\n==========\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
+                    answer = answer + 'Номер получателя: <b>%s</b>;\nСтатус доставки: ОК, сообщение может быть доставлено абоненту;\nКоличество SMS: <b>%s шт</b>;\nСтоимость: <b>%sр</b>.\n==========\n'%(sms[0],sms[1].get('sms'),sms[1].get('cost'))
                 else:
                     answer = answer + 'Номер получателя: <b>%s</b>;\nСтатус доставки: <b>%s</b>, <b>%s</b>\n==========\n'%(sms[0],sms[1].get('status'),sms[1].get('status_text'))
             utils.shelve_write(chat_id, states.U_NO_ACT)

@@ -5,8 +5,6 @@ admin_ids = ('332761',) #tuple of ids, who may use bot
 public_mode_on = False #True - giving access to anyone, False - reacts on messages only from allowed_ids list
 notify_admins = True #True - send attention message to admin_ids list when someone not allowed trying to use bot
 
-
-
 project_name = 'kss-do-sms-bot'
 shelve_name = 'users_states'
 phone_num_format_switch = '0'

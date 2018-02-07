@@ -16,13 +16,13 @@ def shelve_read(id):
         return data
 
 def format_numbers(string, format='0'):
-    number_pattern = re.compile('([\+]?[\(\)\-\d]{9,17})\b*')
+    number_pattern = re.compile('([\+]?[\(\)\-\d]{8,17})\b*')
     raw_numbers = re.findall(number_pattern, string)
     if len(raw_numbers)==0:
         raise TypeError('must be at least 1 phone number')
     bad_symbols = ['+', '-', '(', ')', ' ']
     clear_numbers = []
-    clear_pattern = re.compile('([7-8])([\d]{3})([\d]{3})([\d]{2})([\d]{2})')
+    clear_pattern = re.compile('([7-8]?)([\d]{3})([\d]{3})([\d]{2})([\d]{2})')
     for number in raw_numbers:
         for symb in bad_symbols:
             number = number.replace(symb,'')
@@ -31,8 +31,6 @@ def format_numbers(string, format='0'):
         grouped_number = config.num_format_dict.get(format).format(g[1], g[2], g[3], g[4])
         clear_numbers.append(grouped_number)
     return clear_numbers
-
-
 
 #def get_request():
 #    params = {'api_id':config.sms_token, 'json':1}
