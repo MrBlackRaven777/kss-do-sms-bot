@@ -34,6 +34,8 @@ def check_id(id):
             return False
         
 def notifier(delay):
+    credentials = Credentials('d.voskresenskiy@kss.do', 'kSSDO111')
+    account = Account('d.voskresenskiy@kss.do', credentials=credentials, autodiscover=True)
     with shelve.open('nodes') as nodes_storage:
         nodes_dict = dict(nodes_storage)
         
