@@ -16,7 +16,7 @@ def shelve_read(id):
         return data
 
 def format_numbers(string, format='0'):
-    number_pattern = re.compile('([\+]?[\(\)\-\d]{9,17})\b*')
+    number_pattern = re.compile('([\+]?[\(\)\-\d]{8,17})\b*')
     raw_numbers = re.findall(number_pattern, string)
     if len(raw_numbers)==0:
         raise TypeError('must be at least 1 phone number')
