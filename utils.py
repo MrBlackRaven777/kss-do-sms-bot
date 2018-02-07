@@ -22,7 +22,7 @@ def format_numbers(string, format='0'):
         raise TypeError('must be at least 1 phone number')
     bad_symbols = ['+', '-', '(', ')', ' ']
     clear_numbers = []
-    clear_pattern = re.compile('([7-8])([\d]{3})([\d]{3})([\d]{2})([\d]{2})')
+    clear_pattern = re.compile('([7-8]?)([\d]{3})([\d]{3})([\d]{2})([\d]{2})')
     for number in raw_numbers:
         for symb in bad_symbols:
             number = number.replace(symb,'')
