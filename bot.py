@@ -4,10 +4,6 @@ import config
 import requests
 import utils
 import sys
-from exchangelib import Account, Credentials
-import re
-import shelve
-import time
 from config import u_states as states
 from flask import Flask, request
 
@@ -33,31 +29,6 @@ def check_id(id):
                     bot.send_message(int(adm_id), user_info, parse_mode='HTML')
             return False
         
-def notifier(delay):
-    credentials = Credentials('d.voskresenskiy@kss.do', 'kSSDO111')
-    account = Account('d.voskresenskiy@kss.do', credentials=credentials, autodiscover=True)
-    with shelve.open('nodes') as nodes_storage:
-        nodes_dict = dict(nodes_storage)
-        
-    discharged = account.inbox / 'MeshLogic' / 'Разряжаются'
-    if discharged.unread_count > 0:
-        pattern = re.compile('([_\d]{7,9}).*([,\d]{5}).*(\d{2}\.\d{2}\.\d{4}).*(\d{2}\:\d{2}\:\d{2}).*([0-9,]{5}).*(\d{2}\.\d{2}\.\d{4}).*(\d{2}\:\d{2}\:\d{2})', re.DOTALL)
-        for item in discharged.filter(is_read=False):
-#            print(item.body)
-            r = re.findall(pattern, item.body)
-            print(r)
-            print(r[0][0])
-            node = str(r[0][0])[:str(r[0][0]).find('_')]
-            print(node)
-            msg = 'Оповещение Нахимовский:\n%s в %s узел %s (У%s) разрядился до %sВ'%(r[0][2], r[0][3], node, nodes_dict.get(node), r[0][1])
-            print(msg)
-            print(item.is_read)
-            item.is_read = True
-            item.save
-    del nodes_dict
-    time.sleep(delay)
-    notifier(delay)
-
 @bot.message_handler(commands=['start'], func=lambda message: check_id(message.chat.id))
 def start(message):
     answer = 'Приветствую тебя, %s! Я бот для управления смс-рассылкой ООО"КомпозитСпецСтрой". Отправь мне /help чтобы узнать о всех моих функциях.'%(message.from_user.first_name)
@@ -167,6 +138,5 @@ def webhook():
 
 
 if __name__ == '__main__':
-    notifier(15)
     server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
 
