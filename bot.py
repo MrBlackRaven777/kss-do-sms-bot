@@ -28,29 +28,7 @@ def check_id(id):
                 for adm_id in config.admin_ids:
                     bot.send_message(int(adm_id), user_info, parse_mode='HTML')
             return False
-
-def notifier(delay):
-    with shelve.open('nodes') as nodes_storage:
-        nodes_dict = dict(nodes_storage)
         
-    discharged = account.inbox / 'MeshLogic' / 'Разряжаются'
-    if discharged.unread_count > 0:
-        pattern = re.compile('([_\d]{7,9}).*([,\d]{5}).*(\d{2}\.\d{2}\.\d{4}).*(\d{2}\:\d{2}\:\d{2}).*([0-9,]{5}).*(\d{2}\.\d{2}\.\d{4}).*(\d{2}\:\d{2}\:\d{2})', re.DOTALL)
-        for item in discharged.filter(is_read=False):
-#            print(item.body)
-            r = re.findall(pattern, item.body)
-            print(r)
-            print(r[0][0])
-            node = str(r[0][0])[:str(r[0][0]).find('_')]
-            print(node)
-            msg = 'Оповещение Нахимовский:\n%s в %s узел %s (У%s) разрядился до %sВ'%(r[0][2], r[0][3], node, nodes_dict.get(node), r[0][1])
-            print(msg)
-            print(item.is_read)
-            item.is_read = True
-            item.save
-    del nodes_dict
-    time.sleep(delay)
-    notifier(delay)
 
 @bot.message_handler(commands=['start'], func=lambda message: check_id(message.chat.id))
 def start(message):
@@ -82,7 +60,7 @@ def cost_phones(message):
     try:
         numbers_list = utils.format_numbers(message.text, '0')
         postfix = 'а' if len(numbers_list)>1 else ''
-        answer = 'Вы прислали мне номер' + postfix + ': ' + '\n'.join(numbers_list) + '\nЕсли что-то введено неправильно, нажмите /cost и введите номера заново. Введите текст сообщения:'
+        answer = 'Вы прислали мне номер' + postfix + ': ' + '\n'.join(numbers_list) + '.\nЕсли что-то введено неправильно, нажмите /cost и введите номера заново. Введите текст сообщения:'
         utils.shelve_write(chat_id, states.U_ENT_PHONES)
         numbers_string = ','.join(utils.format_numbers(message.text, '2'))
     except TypeError:
@@ -157,5 +135,4 @@ def webhook():
 
 if __name__ == '__main__':
     server.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
-    notifier(30)
 
